@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #4CAF50;
+}
+
+.cards {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.card {
+    flex: 1;
+    min-width: 180px;
+    background: #1f1f1f;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card h2 {
+    margin: 0;
+    color: #4CAF50;
+}
+
+button {
+    background: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    margin-right: 10px;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #2a2a2a;
+    padding: 10px;
+}
+
+td {
+    padding: 8px;
+    border: 1px solid #333;
+}
+
+td[contenteditable="true"] {
+    background: #1b1b1b;
+}
+
+.delete {
+    background: crimson;
+}
+</style>
+</head>
+<body>
+
+<h1>🏋️ Workout Tracker</h1>
+
+<div class="cards">
+    <div class="card">
+        <h2 id="setsTotal">0</h2>
+        <p>Total Sets</p>
+    </div>
+
+    <div class="card">
+        <h2 id="weightTotal">0kg</h2>
+        <p>Total Weight Used</p>
+    </div>
+
+    <div class="card">
+        <h2 id="volumeTotal">0kg</h2>
+        <p>Total Volume</p>
+    </div>
+
+    <div class="card">
+        <h2 id="exerciseTotal
