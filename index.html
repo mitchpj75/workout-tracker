@@ -3,101 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Workout Tracker</title>
+<title>Paul's Workout Tracker</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: white;
-    margin: 0;
-    padding: 20px;
+:root{
+    --bg:#0f1115;
+    --card:#1c1f26;
+    --accent:#58c45a;
+    --text:#ffffff;
+    --border:#303542;
 }
 
-h1 {
-    text-align: center;
-    color: #4CAF50;
+*{
+    box-sizing:border-box;
 }
 
-.cards {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Segoe UI, Arial, sans-serif;
+    padding:20px;
 }
 
-.card {
-    flex: 1;
-    min-width: 180px;
-    background: #1f1f1f;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
+h1{
+    text-align:center;
+    color:var(--accent);
 }
 
-.card h2 {
-    margin: 0;
-    color: #4CAF50;
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-bottom:20px;
 }
 
-button {
-    background: #4CAF50;
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 15px;
-    margin-right: 10px;
+.card{
+    background:var(--card);
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
 }
 
-button:hover {
-    background: #45a049;
+.card h2{
+    margin:0;
+    color:var(--accent);
+    font-size:32px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
 }
 
-th {
-    background: #2a2a2a;
-    padding: 10px;
+button{
+    background:var(--accent);
+    border:none;
+    color:white;
+    padding:10px 15px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
 }
 
-td {
-    padding: 8px;
-    border: 1px solid #333;
+button:hover{
+    opacity:0.9;
 }
 
-td[contenteditable="true"] {
-    background: #1b1b1b;
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--card);
 }
 
-.delete {
-    background: crimson;
+th{
+    background:#262b35;
+    padding:12px;
+}
+
+td{
+    border:1px solid var(--border);
+    padding:8px;
+}
+
+input,select{
+    width:100%;
+    background:#12151b;
+    color:white;
+    border:1px solid #444;
+    padding:6px;
+}
+
+.deleteBtn{
+    background:#cc3333;
+}
+
+.section-title{
+    margin-top:35px;
+    margin-bottom:15px;
+    color:var(--accent);
+}
+
+@media(max-width:900px){
+    table{
+        font-size:12px;
+    }
 }
 </style>
 </head>
+
 <body>
 
-<h1>🏋️ Workout Tracker</h1>
+<h1>🏋️ Paul's Workout Tracker</h1>
 
-<div class="cards">
+<div class="dashboard">
+
     <div class="card">
-        <h2 id="setsTotal">0</h2>
+        <h2 id="totalExercises">0</h2>
+        <p>Exercises</p>
+    </div>
+
+    <div class="card">
+        <h2 id="totalSets">0</h2>
         <p>Total Sets</p>
     </div>
 
     <div class="card">
-        <h2 id="weightTotal">0kg</h2>
-        <p>Total Weight Used</p>
+        <h2 id="totalWeight">0</h2>
+        <p>Total Weight</p>
     </div>
 
     <div class="card">
-        <h2 id="volumeTotal">0kg</h2>
+        <h2 id="totalVolume">0</h2>
         <p>Total Volume</p>
     </div>
 
+</div>
+
+<div class="dashboard">
+
     <div class="card">
-        <h2 id="exerciseTotal
+        <label>Current Weight (kg)</label>
+        <input id="bodyWeight" type="number" value="94">
+    </div>
+
+    <div class="card">
+        <label>Waist (inches)</label>
+        <input id="waist" type="number" value="36">
+    </div>
+
+</div>
+
+<div class="toolbar">
+    <button onclick="addRow()">Add Exercise</button>
+    <button onclick="exportData()">Export Backup</button>
+</div>
+
+<h2 class="section-title">Workout Schedule</h2>
+
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Area</th>
+<th>Exercise</th>
+<th>Sets</th>
+<th>Reps</th>
+<th>Weight (kg)</th>
+<th>Delete</th>
+</tr>
+</thead>
+
+<tbody id="workoutBody"></tbody>
+
+</table>
+
+<script>
+
+let workouts =
+JSON.parse(localStorage.getItem("workouts")) || [
+
+["Monday","Chest","Pec Deck",3,12,50],
+["Monday","Triceps","Cable Pushdown",3,12,40],
+
+["Tuesday","Shoulders","Lateral Raise",3,12,8],
+["Tuesday","Biceps","Hammer Curl",3,12,13.5],
+
+["Thursday","Chest","Incline Press",3,12,13.5],
+["Thursday","Triceps","Overhead Cable Pull",3,12,35],
+
+["Friday","Shoulders","Shoulder Press",3,12,11.5],
+["Friday","Biceps","Concentration Curl",3,12,13.5],
+
+["Saturday","Back","Cable Row",3,12,45],
+["Saturday","Legs","Squat",3,20,0]
+
+];
+
+function render(){
+
+const tbody=document.getElementById("workoutBody");
+tbody.innerHTML="";
+
+workouts.forEach((row,index)=>{
+
+const tr=document.createElement("tr");
+
+row.forEach((value,col)=>{
+
+const td=document.createElement("td");
+
+const input=document.createElement
