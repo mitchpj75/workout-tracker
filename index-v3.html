@@ -243,6 +243,8 @@ day.forEach(row=>{
 
 exerciseCount++;
 
+const area = row[0];
+
 const sets = Number(row[2]) || 0;
 const reps = Number(row[3]) || 0;
 const weight = Number(row[4]) || 0;
@@ -250,9 +252,9 @@ const weight = Number(row[4]) || 0;
 totalSets += sets;
 totalVolume += sets * reps * weight;
 
-});
-
-});
+if(muscleTotals[area] !== undefined){
+    muscleTotals[area] += sets;
+}
 
 document.getElementById("exerciseCount").innerText =
 exerciseCount;
@@ -262,7 +264,23 @@ totalSets;
 
 document.getElementById("volumeCount").innerText =
 totalVolume.toLocaleString();
+document.getElementById("chestSets").innerText =
+muscleTotals.Chest;
 
+document.getElementById("tricepSets").innerText =
+muscleTotals.Triceps;
+
+document.getElementById("shoulderSets").innerText =
+muscleTotals.Shoulders;
+
+document.getElementById("bicepSets").innerText =
+muscleTotals.Biceps;
+
+document.getElementById("backSets").innerText =
+muscleTotals.Back;
+
+document.getElementById("legSets").innerText =
+muscleTotals.Legs;
 }
 
 function renderTabs(){
