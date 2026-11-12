@@ -228,6 +228,14 @@ function calculateTotals(){
 let exerciseCount = 0;
 let totalSets = 0;
 let totalVolume = 0;
+let muscleTotals = {
+    Chest:0,
+    Triceps:0,
+    Shoulders:0,
+    Biceps:0,
+    Back:0,
+    Legs:0
+};
 
 Object.values(data).forEach(day=>{
 
