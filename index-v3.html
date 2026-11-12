@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul's Workout Tracker V3</title>
+
+<style>
+body{
+    background:#121212;
+    color:white;
+    font-family:Segoe UI,Arial,sans-serif;
+    margin:0;
+    padding:20px;
+}
+
+h1{
+    color:#4CAF50;
+}
+
+.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:20px;
+}
+
+.tabs button{
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:#1e1e1e;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.card h2{
+    margin:0;
+    color:#4CAF50;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #444;
+    padding:8px;
+}
+
+input{
+    width:100%;
+    background:#202020;
+    color:white;
+    border:1px solid #555;
+    padding:5px;
+}
+
+button.action{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:8px;
+    margin:5px;
+    cursor:pointer;
+}
+
+.deleteBtn{
+    background:#aa2222;
+}
+</style>
+</head>
+<body>
+
+<h1>🏋️ Paul's Workout Tracker V3</h1>
+
+<div class="card-grid">
+
+<div class="card">
+<h2 id="exerciseCount">0</h2>
+<p>Exercises</p>
+</div>
+
+<div class="card">
+<h2 id="setCount">0</h2>
+<p>Total Sets</p>
+</div>
+
+<div class="card">
+<h2 id="volumeCount">0</h2>
+<p>Total Volume</p>
+</div>
+
+<div class="card">
+<p>Weight (kg)</p>
+<input id="bodyWeight" value="94">
+</div>
+
+<div class="card">
+<p>Waist (in)</p>
+<input id="waist" value="36">
+</div>
+
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<h2 id="dayTitle"></h2>
+
+<button class="action" onclick="addExercise()">Add Exercise</button>
+
+<table>
+
+<thead>
+<tr>
+<th>Area</th>
+<th>Exercise</th>
+<th>Sets</th>
+<th>Reps</th>
+<th>Weight</th>
+<th>Delete</th>
+</tr>
+</thead>
+
+<tbody id="workoutTable">
+</tbody>
+
+</table>
+
+<script>
+
+const defaultData = {
+
+"Monday":[
+["Chest","Pec Deck",3,12,0],
+["Chest","Wide Arm Press Ups",3,20,0],
+["Triceps","Cable Pull Downs",3,12,0]
+],
+
+"Tuesday":[
+["Shoulders","Shoulder Shrugs",3,12,16],
+["Shoulders","Lateral Raises",3,12,8],
+["Biceps","Hammer Curls",3,12,13.5]
+],
+
+"Wednesday":[],
+
+"Thursday":[
+["Chest","Incline Dumbbell Press",3,12,13.5],
+["Triceps","Overhead Cable Pull",3,12,0]
+],
+
+"Friday":[
+["Shoulders","Shoulder Press",3,12,11.5],
+["Biceps","Concentration Curl",3,12,13.5]
+],
+
+"Saturday":[
+["Back","Cable Row",3,12,0],
+["Back","Wide Pulldown",3,12,0],
+["Legs","Squats",3,20,0]
+],
+
+"Sunday":[]
+};
+
+let data = JSON.parse(localStorage.getItem("workoutData")) || defaultData;
+
+let currentDay = "Monday";
+
+function save(){
+
+localStorage.setItem(
+"workoutData",
+JSON.stringify(data)
+);
+
+calculateTotals();
+}
+
+function calculateTotals(){
+
+let exerciseCount = 0;
+let totalSets = 0;
+let totalVolume = 0;
+
+Object.values(data).forEach(day=>{
+
+day.forEach(row=>{
+
+exerciseCount++;
+
+const sets = Number(row[2]) || 0;
+const reps = Number(row[3]) || 0;
+const weight = Number(row[4]) || 0;
+
+totalSets += sets;
+totalVolume += sets * reps * weight;
+
+});
+
+});
+
+document.getElementById("exerciseCount").innerText =
+exerciseCount;
+
+document.getElementById("setCount").innerText =
+totalSets;
+
+document.getElementById("volumeCount").innerText =
+totalVolume.toLocaleString();
+
+}
+
+function renderTabs(){
+
+const tabs = document.getElementById("tabs");
+
+tabs.innerHTML = "";
+
+Object.keys(data).forEach(day=>{
+
+const btn = document.createElement("button");
+
+btn.innerText = day;
+
+btn.onclick = ()=>{
+
+currentDay = day;
+
+renderTable();
+
+};
+
+tabs.appendChild(btn);
+
+});
+
+}
+
+function renderTable(){
+
+document.getElementById("dayTitle").innerText =
+currentDay;
+
+const table =
+document.getElementById("workoutTable");
+
+table.innerHTML = "";
+
+data[currentDay].forEach((row,index)=>{
+
+const tr = document.createElement("tr");
+
+row.forEach((value,col)=>{
+
+const td = document.createElement("td");
+
+const input = document.createElement("input");
+
+input.value = value;
+
+input.onchange = ()=>{
+
+data[currentDay][index][col] =
+input.value;
+
+save();
+
+};
+
+td.appendChild(input);
+
+tr.appendChild(td);
+
+});
+
+const deleteCell =
+document.createElement("td");
+
+const deleteBtn =
+document.createElement("button");
+
+deleteBtn.innerText = "Delete";
+
+deleteBtn.className = "deleteBtn";
+
+deleteBtn.onclick = ()=>{
+
+data[currentDay].splice(index,1);
+
+save();
+
+renderTable();
+
+};
+
+deleteCell.appendChild(deleteBtn);
+
+tr.appendChild(deleteCell);
+
+table.appendChild(tr);
+
+});
+
+calculateTotals();
+
+}
+
+function addExercise(){
+
+data[currentDay].push([
+"",
+"",
+3,
+12,
+0
+]);
+
+save();
+
+renderTable();
+
+}
+
+renderTabs();
+renderTable();
+
+</script>
+
+</body>
+</html>
