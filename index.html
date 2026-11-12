@@ -1,167 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paul's Workout Tracker</title>
+<meta charset="utf-8">
+<title>Workout Tracker</title>
 
 <style>
-:root{
-    --bg:#0f1115;
-    --card:#1c1f26;
-    --accent:#58c45a;
-    --text:#ffffff;
-    --border:#303542;
-}
-
-*{
-    box-sizing:border-box;
-}
-
 body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:Segoe UI, Arial, sans-serif;
-    padding:20px;
+    font-family:Arial,sans-serif;
+    background:#111;
+    color:white;
+    margin:20px;
 }
 
 h1{
-    text-align:center;
-    color:var(--accent);
-}
-
-.dashboard{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.card{
-    background:var(--card);
-    padding:20px;
-    border-radius:12px;
-    text-align:center;
-}
-
-.card h2{
-    margin:0;
-    color:var(--accent);
-    font-size:32px;
-}
-
-.toolbar{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
+    color:#4CAF50;
 }
 
 button{
-    background:var(--accent);
-    border:none;
+    background:#4CAF50;
     color:white;
-    padding:10px 15px;
-    border-radius:6px;
+    border:none;
+    padding:10px;
     cursor:pointer;
-    font-weight:600;
-}
-
-button:hover{
-    opacity:0.9;
+    margin-bottom:20px;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    background:var(--card);
 }
 
-th{
-    background:#262b35;
-    padding:12px;
-}
-
-td{
-    border:1px solid var(--border);
+th,td{
+    border:1px solid #444;
     padding:8px;
 }
 
-input,select{
+input{
     width:100%;
-    background:#12151b;
+    background:#222;
     color:white;
-    border:1px solid #444;
-    padding:6px;
-}
-
-.deleteBtn{
-    background:#cc3333;
-}
-
-.section-title{
-    margin-top:35px;
-    margin-bottom:15px;
-    color:var(--accent);
-}
-
-@media(max-width:900px){
-    table{
-        font-size:12px;
-    }
+    border:1px solid #555;
+    padding:5px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🏋️ Paul's Workout Tracker</h1>
+<h1>Workout Tracker</h1>
 
-<div class="dashboard">
+<button onclick="addRow()">Add Exercise</button>
 
-    <div class="card">
-        <h2 id="totalExercises">0</h2>
-        <p>Exercises</p>
-    </div>
-
-    <div class="card">
-        <h2 id="totalSets">0</h2>
-        <p>Total Sets</p>
-    </div>
-
-    <div class="card">
-        <h2 id="totalWeight">0</h2>
-        <p>Total Weight</p>
-    </div>
-
-    <div class="card">
-        <h2 id="totalVolume">0</h2>
-        <p>Total Volume</p>
-    </div>
-
-</div>
-
-<div class="dashboard">
-
-    <div class="card">
-        <label>Current Weight (kg)</label>
-        <input id="bodyWeight" type="number" value="94">
-    </div>
-
-    <div class="card">
-        <label>Waist (inches)</label>
-        <input id="waist" type="number" value="36">
-    </div>
-
-</div>
-
-<div class="toolbar">
-    <button onclick="addRow()">Add Exercise</button>
-    <button onclick="exportData()">Export Backup</button>
-</div>
-
-<h2 class="section-title">Workout Schedule</h2>
+<p>
+Exercises: <span id="exerciseCount">0</span>
+</p>
 
 <table>
 <thead>
@@ -171,48 +63,71 @@ input,select{
 <th>Exercise</th>
 <th>Sets</th>
 <th>Reps</th>
-<th>Weight (kg)</th>
-<th>Delete</th>
+<th>Weight</th>
 </tr>
 </thead>
 
-<tbody id="workoutBody"></tbody>
+<tbody id="workoutBody">
+</tbody>
 
 </table>
 
 <script>
 
-let workouts =
-JSON.parse(localStorage.getItem("workouts")) || [
-
-["Monday","Chest","Pec Deck",3,12,50],
-["Monday","Triceps","Cable Pushdown",3,12,40],
-
-["Tuesday","Shoulders","Lateral Raise",3,12,8],
-["Tuesday","Biceps","Hammer Curl",3,12,13.5],
-
-["Thursday","Chest","Incline Press",3,12,13.5],
-["Thursday","Triceps","Overhead Cable Pull",3,12,35],
-
-["Friday","Shoulders","Shoulder Press",3,12,11.5],
-["Friday","Biceps","Concentration Curl",3,12,13.5],
-
-["Saturday","Back","Cable Row",3,12,45],
-["Saturday","Legs","Squat",3,20,0]
-
+let workouts = [
+    ["Monday","Chest","Pec Deck",3,12,50],
+    ["Monday","Triceps","Push Down",3,12,40],
+    ["Tuesday","Biceps","Hammer Curl",3,12,13.5]
 ];
 
-function render(){
+function render() {
 
-const tbody=document.getElementById("workoutBody");
-tbody.innerHTML="";
+    const body = document.getElementById("workoutBody");
 
-workouts.forEach((row,index)=>{
+    body.innerHTML = "";
 
-const tr=document.createElement("tr");
+    workouts.forEach(function(row){
 
-row.forEach((value,col)=>{
+        let tr = document.createElement("tr");
 
-const td=document.createElement("td");
+        row.forEach(function(value){
 
-const input=document.createElement
+            let td = document.createElement("td");
+
+            let input = document.createElement("input");
+
+            input.value = value;
+
+            td.appendChild(input);
+
+            tr.appendChild(td);
+
+        });
+
+        body.appendChild(tr);
+
+    });
+
+    document.getElementById("exerciseCount").innerText = workouts.length;
+}
+
+function addRow(){
+
+    workouts.push([
+        "Day",
+        "Area",
+        "Exercise",
+        3,
+        12,
+        0
+    ]);
+
+    render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
