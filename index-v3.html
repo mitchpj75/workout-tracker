@@ -323,6 +323,9 @@ const defaultData = {
 let data = JSON.parse(localStorage.getItem("workoutData")) || defaultData;
 
 let currentDay = "Monday";
+let completionData =
+JSON.parse(localStorage.getItem("completionData"))
+|| {};
 
 function save(){
 
@@ -473,7 +476,22 @@ const checkbox =
 document.createElement("input");
 
 checkbox.type = "checkbox";
+
+const completionKey =
+currentDay + "_" + index;
+
+checkbox.checked =
+completionData[completionKey] || false;
+
 checkbox.onchange = () => {
+
+completionData[completionKey] =
+checkbox.checked;
+
+localStorage.setItem(
+    "completionData",
+    JSON.stringify(completionData)
+);
 
     if(checkbox.checked){
         completedCount++;
