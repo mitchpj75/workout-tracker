@@ -455,6 +455,18 @@ tr.appendChild(td);
 
 });
 
+const doneCell =
+document.createElement("td");
+
+const checkbox =
+document.createElement("input");
+
+checkbox.type = "checkbox";
+
+doneCell.appendChild(checkbox);
+
+tr.appendChild(doneCell);
+
 const deleteCell =
 document.createElement("td");
 
