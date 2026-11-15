@@ -485,13 +485,13 @@ completionData[completionKey] || false;
 
 checkbox.onchange = () => {
 
-completionData[completionKey] =
-checkbox.checked;
+    completionData[completionKey] =
+    checkbox.checked;
 
-localStorage.setItem(
-    "completionData",
-    JSON.stringify(completionData)
-);
+    localStorage.setItem(
+        "completionData",
+        JSON.stringify(completionData)
+    );
 
     if(checkbox.checked){
         completedCount++;
