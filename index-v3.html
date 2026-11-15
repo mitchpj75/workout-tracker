@@ -397,6 +397,8 @@ function renderTabs(){
 const tabs = document.getElementById("tabs");
 
 tabs.innerHTML = "";
+let completedCount = 0;
+let totalCount = data[currentDay].length;
 
 Object.keys(data).forEach(day=>{
 
@@ -462,6 +464,31 @@ const checkbox =
 document.createElement("input");
 
 checkbox.type = "checkbox";
+checkbox.onchange = () => {
+
+    if(checkbox.checked){
+        completedCount++;
+    } else {
+        completedCount--;
+    }
+
+    document.getElementById("progressDisplay").innerText =
+        "Progress: " + completedCount +
+        " / " + totalCount + " Complete";
+
+    if(completedCount === totalCount && totalCount > 0){
+
+        document.getElementById(
+            "completionBanner"
+        ).style.display = "block";
+
+    } else {
+
+        document.getElementById(
+            "completionBanner"
+        ).style.display = "none";
+    }
+};
 
 doneCell.appendChild(checkbox);
 
@@ -494,6 +521,11 @@ tr.appendChild(deleteCell);
 table.appendChild(tr);
 
 });
+
+document.getElementById("progressDisplay").innerText =
+    "Progress: 0 / " +
+    totalCount +
+    " Complete";
 
 calculateTotals();
 
