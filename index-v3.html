@@ -583,6 +583,29 @@ renderTable();
 
 }
 
+function resetWorkout(){
+
+    Object.keys(completionData).forEach(key => {
+
+        if(key.startsWith(currentDay + "_")){
+            delete completionData[key];
+        }
+
+    });
+
+    localStorage.setItem(
+        "completionData",
+        JSON.stringify(completionData)
+    );
+
+    document.getElementById(
+        "completionBanner"
+    ).style.display = "none";
+
+    renderTable();
+
+}
+    
 renderTabs();
 renderTable();
 
