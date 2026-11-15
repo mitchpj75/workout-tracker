@@ -483,6 +483,10 @@ currentDay + "_" + index;
 checkbox.checked =
 completionData[completionKey] || false;
 
+if(checkbox.checked){
+    completedCount++;
+}
+
 checkbox.onchange = () => {
 
     completionData[completionKey] =
@@ -500,8 +504,11 @@ checkbox.onchange = () => {
     }
 
     document.getElementById("progressDisplay").innerText =
-        "Progress: " + completedCount +
-        " / " + totalCount + " Complete";
+    "Progress: " +
+    completedCount +
+    " / " +
+    totalCount +
+    " Complete";
 
     if(completedCount === totalCount && totalCount > 0){
 
