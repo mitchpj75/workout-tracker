@@ -430,6 +430,9 @@ document.getElementById("workoutTable");
 
 table.innerHTML = "";
 
+let completedCount = 0;
+let totalCount = data[currentDay].length;
+
 data[currentDay].forEach((row,index)=>{
 
 const tr = document.createElement("tr");
